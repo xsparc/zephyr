@@ -33,7 +33,7 @@ namespace {
 	TfLiteTensor *output = nullptr;
 	int inference_count = 0;
 
-	constexpr int kTensorArenaSize = 2000;
+	constexpr int kTensorArenaSize = 10000;
 	uint8_t tensor_arena[kTensorArenaSize];
 }  /* namespace */
 
@@ -54,8 +54,14 @@ void setup(void)
 	/* This pulls in the operation implementations we need.
 	 * NOLINTNEXTLINE(runtime-global-variables)
 	 */
-	static tflite::MicroMutableOpResolver <1> resolver;
+	static tflite::MicroMutableOpResolver <7> resolver;
 	resolver.AddFullyConnected();
+	resolver.AddConv2D();
+	resolver.AddPad();
+	resolver.AddReshape();
+	resolver.AddAdd();
+	resolver.AddMul();
+	resolver.AddMaxPool2D();
 
 	/* Build an interpreter to run the model with. */
 	static tflite::MicroInterpreter static_interpreter(
